@@ -2,199 +2,159 @@ import streamlit as st
 import pandas as pd
 import joblib
 
-# ============================
+# ----------------------------
 # Load Model
-# ============================
-model = joblib.load("best_lgbm_model.pkl")
+# ----------------------------
+model = joblib.load("best_catboost_model.pkl")
+df=pd.read_csv("Input_data.csv")
 
+# ----------------------------
+# Page Configuration
+# ----------------------------
 st.set_page_config(
-    page_title="Movie Box Office Prediction",
+    page_title="Movie Box Office Collection Prediction",
     page_icon="🎬",
-    layout="centered"
+    layout="wide"
 )
 
+# ----------------------------
+# Title
+# ----------------------------
 st.title("🎬 Movie Box Office Collection Prediction")
+st.write("Predict the expected box office collection of a movie based on its features.")
 
-st.write("Predict the expected Box Office Collection (Crores)")
+st.markdown("---")
 
-st.divider()
+# ----------------------------
+# Sidebar
+# ----------------------------
+st.sidebar.header("Enter Movie Details")
 
-# ============================
-# User Inputs
-# ============================
-
-vote_average = st.slider(
-    "IMDb Rating",
-    1.0,
-    10.0,
-    7.0,
-    0.1
-)
-
-vote_count = st.number_input(
+vote_count = st.sidebar.number_input(
     "Vote Count",
     min_value=0,
-    value=10000
+    value=1000
 )
 
-language = st.selectbox(
-    "Language",
-    [
-        "hi",
-        "ta",
-        "te",
-        "ml",
-        "kn"
-    ]
-)
-
-popularity = st.slider(
+popularity = st.sidebar.slider(
     "Popularity",
     0.0,
     100.0,
-    50.0,
-    0.1
+    25.0
 )
 
-genre = st.selectbox(
+budget = st.sidebar.number_input(
+    "Budget (Crores ₹)",
+    min_value=1,
+    value=100
+)
+
+language = st.sidebar.selectbox(
+    "Original Language",
+    [
+        "Hindi",
+        "Tamil",
+        "Telugu",
+        "Malayalam",
+        "Kannada",
+        "Bengali",
+        "English",
+        "Marathi",
+        "Punjabi",
+        "Gujarati",
+        "Oriya",
+        "Tibetan",
+        "Assamese",
+        "Urdu"
+    ]
+)
+
+genres = st.sidebar.selectbox(
     "Genre",
-    [
-        "Action",
-        "Drama",
-        "Comedy",
-        "Thriller",
-        "Romance",
-        "Crime",
-        "Sci-Fi",
-        "Adventure",
-        "Family",
-        "Mystery"
+    ['Political Drama', 'Buddy Comedy', 'Coming-of-Age', 'Drama',
+       'Quest', 'Action Epic', 'Docudrama', 'Epic', 'Psychological Drama',
+       'Conspiracy Thriller', 'One-Person Army Action', 'Gangster',
+       'Crime', 'Medical Drama', 'Comedy', 'Suspense Mystery', 'Gun Fu',
+       'Romantic Comedy', 'Action', 'Biography', 'Adventure',
+       'Body Horror', 'Psychological Thriller', 'Quirky Comedy',
+       'True Crime', 'Feel-Good Romance', 'Spy', 'Heist', 'Period Drama',
+       'Cop Drama', 'Romantic Epic', 'Road Trip', 'Tragedy',
+       'Legal Thriller', 'Supernatural Horror', 'Parody',
+       'Artificial Intelligence', 'Desert Adventure', 'Dark Romance',
+       'Historical Epic', 'Political Thriller', 'Monster Horror',
+       'Tragic Romance', 'Psychological Horror', 'Drug Crime',
+       'Dark Comedy', 'Showbiz Drama', 'Caper', 'Satire', 'Superhero',
+       'Time Travel', 'Legal Drama', 'Jungle Adventure', 'Slapstick',
+       'Martial Arts', 'Romance', 'Anime', 'Disaster', 'Serial Killer',
+       'Police Procedural', 'Teen Romance', 'Mystery',
+       'History Documentary', 'Boxing', 'Fairy Tale', 'Horror',
+       'Sports Documentary', 'Computer Animation', 'Animation',
+       'Raunchy Comedy', 'Thriller', 'Fantasy', 'Buddy Cop',
+       'Swashbuckler', 'Mockumentary', 'Cyber Thriller', 'Family',
+       'Globetrotting Adventure', 'Kung Fu', 'Screwball Comedy',
+       'Whodunnit', 'Extreme Sport', 'Dystopian Sci-Fi', 'Teen Comedy',
+       'Erotic Thriller'
     ]
 )
 
-company = st.selectbox(
-    "Production Company",
-    [
-        "Yash Raj Films",
-        "Dharma Productions",
-        "T-Series",
-        "Mythri Movie Makers",
-        "Hombale Films",
-        "Lyca Productions",
-        "Sun Pictures",
-        "Excel Entertainment",
-        "Red Chillies Entertainment",
-        "AGS Entertainment"
-    ]
-)
+directors_list = sorted(df["directors"].dropna().unique().tolist())
 
-actor = st.selectbox(
-    "Lead Actor",
-    [
-        "Shah Rukh Khan",
-        "Salman Khan",
-        "Aamir Khan",
-        "Ranbir Kapoor",
-        "Ranveer Singh",
-        "Deepika Padukone",
-        "Alia Bhatt",
-        "Prabhas",
-        "Allu Arjun",
-        "Yash",
-        "Jr. NTR",
-        "Ram Charan",
-        "Vijay",
-        "Ajith Kumar",
-        "Suriya",
-        "Akshay Kumar",
-        "Hrithik Roshan",
-        "Kartik Aaryan",
-        "Kiara Advani",
-        "Kareena Kapoor"
-    ]
-)
-
-budget = st.number_input(
-    "Budget (Crores)",
-    min_value=1.0,
-    value=100.0
-)
-
-director = st.selectbox(
+director = st.sidebar.selectbox(
     "Director",
-    [
-        "Rajkumar Hirani",
-        "S. S. Rajamouli",
-        "Lokesh Kanagaraj",
-        "Mani Ratnam",
-        "Atlee",
-        "Zoya Akhtar",
-        "Sanjay Leela Bhansali",
-        "Anurag Kashyap",
-        "Kabir Khan",
-        "Rohit Shetty",
-        "Karan Johar",
-        "Ayan Mukerji",
-        "Vetrimaaran",
-        "Sukumar",
-        "Trivikram Srinivas",
-        "Nelson Dilipkumar",
-        "T. J. Gnanavel",
-        "Shankar",
-        "Vikram Kumar",
-        "Priyadarshan"
-    ]
+    directors_list
 )
 
-# ============================
-# Predict
-# ============================
+cast_list = sorted(df["cast"].dropna().unique().tolist())
 
-if st.button("Predict Collection"):
+cast = st.sidebar.selectbox(
+    "Lead Actor",
+    cast_list
+)
 
-    data = pd.DataFrame({
+# ----------------------------
+# Prediction
+# ----------------------------
+if st.sidebar.button("Predict Collection"):
 
-        "vote_average":[vote_average],
-
+    input_df = pd.DataFrame({
         "vote_count":[vote_count],
-
         "original_language":[language],
-
         "popularity":[popularity],
-
-        "genres":[genre],
-
-        "production_companies":[company],
-
-        "cast":[actor],
-
-        "budget_crore":[budget],
-
+        "genres":[genres],
+        "cast":[cast],
+        "budget":[budget],
         "directors":[director]
-
     })
 
-    prediction = model.predict(data)[0]
+    prediction = model.predict(input_df)[0]
 
-    st.success(
-        f"Predicted Collection : ₹ {prediction:.2f} Crores"
-    )
+    st.success(f"Predicted Box Office Collection: ₹ {prediction:.2f} Crores")
 
-    roi = prediction / budget
+    profit = prediction - budget
+
+    if profit > 0:
+        st.success(f"Estimated Profit: ₹ {profit:.2f} Crores")
+    else:
+        st.error(f"Estimated Loss: ₹ {abs(profit):.2f} Crores")
+
+    roi = (prediction / budget) * 100
 
     st.metric(
-        "ROI",
-        f"{roi:.2f}x"
+        "Return on Investment",
+        f"{roi:.1f}%"
     )
 
-    if roi < 1:
-        st.error("Expected Result : FLOP")
+st.markdown("---")
 
-    elif roi < 2:
-        st.warning("Expected Result : Average")
-
-    elif roi < 4:
-        st.info("Expected Result : HIT")
-
-    else:
-        st.success("Expected Result : BLOCKBUSTER")
+st.info(
+"""
+### Features Used
+- Vote Count
+- Popularity
+- Budget
+- Original Language
+- Genre
+- Director
+- Lead Actor
+"""
+)
