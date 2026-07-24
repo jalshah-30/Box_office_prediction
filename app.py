@@ -38,9 +38,8 @@ vote_count = st.sidebar.number_input(
 
 popularity = st.sidebar.slider(
     "Popularity",
-    0.0,
-    100.0,
-    25.0
+    min_value=0,
+    value=0
 )
 
 budget = st.sidebar.number_input(
