@@ -1,5 +1,2 @@
-*.csv
-data/
-*.csv
 *.xlsx
 *.joblib
