@@ -3,4 +3,3 @@ data/
 *.csv
 *.xlsx
 *.joblib
-*.pkl
