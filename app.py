@@ -234,7 +234,7 @@ with st.sidebar:
     )
 
     vote_count = st.number_input(
-        "Interesed in BMS",
+        "Interesed(BookMyShow)",
         min_value=0,
         max_value=int(df["vote_count"].max()),
         value=1000,
