@@ -1,0 +1,18 @@
+Metadata-Version: 2.4
+Name: Box-Office-Prediction
+Version: 0.0.1
+Author: Jal Shah
+Author-email: jalshahpcps9thb@gmail.com
+Requires-Dist: requests
+Requires-Dist: pandas
+Requires-Dist: matplotlib
+Requires-Dist: seaborn
+Requires-Dist: scikit-learn
+Requires-Dist: xgboost
+Requires-Dist: lightgbm
+Requires-Dist: catboost
+Requires-Dist: streamlit
+Requires-Dist: setuptools
+Dynamic: author
+Dynamic: author-email
+Dynamic: requires-dist

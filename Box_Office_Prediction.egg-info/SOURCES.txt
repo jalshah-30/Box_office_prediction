@@ -1,0 +1,8 @@
+README.md
+setup.py
+Box_Office_Prediction.egg-info/PKG-INFO
+Box_Office_Prediction.egg-info/SOURCES.txt
+Box_Office_Prediction.egg-info/dependency_links.txt
+Box_Office_Prediction.egg-info/requires.txt
+Box_Office_Prediction.egg-info/top_level.txt
+src/__init__.py
