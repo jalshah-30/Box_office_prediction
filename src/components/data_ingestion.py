@@ -6,6 +6,8 @@ import pandas as pd
 
 from sklearn.model_selection import train_test_split
 from dataclasses import dataclass
+from src.components.data_transformation import DataTransformation
+from src.components.data_transformation import DataTransformationConfig
 
 @dataclass
 class DataIngestionConfig:
@@ -22,6 +24,63 @@ class DataIngestion:
         try:
             df=pd.read_csv("Notebooks/data/indian_movies.csv")
             df=df[:1808]
+            genre_mapping = {
+                "Political Drama": "Political",
+                "Buddy Comedy": "Comedy",
+                "Docudrama": "Documentary",
+                "Psychological Drama": "Psychological",
+                "Conspiracy Thriller": "Thriller",
+                "One-Person Army Action": "Action",
+                "Gangster": "Crime",
+                "Medical Drama": "Drama",
+                "Suspense Mystery": "Suspense",
+                "Gun Fu": "Action",
+                "Romantic Comedy":"Romantic",
+                "Body Horror":"Horror",
+                "Psychological Thriller":"Thriller",
+                "Quirky Comedy":"Comedy",
+                "True Crime":"Crime",
+                "Feel-Good Romance":"Romance",
+                "Period Drama":"History",
+                "Cop Drama":"Cop",
+                "Romantic Epic":"Romantic",
+                "Legal Thriller":"Legal",
+                "Supernatural Horror":"Horror",
+                "Artificial Intelligence":"Tech",
+                "Desert Adventure":"Adventure",
+                "Dark Romance":"Romance",
+                "Historical Epic":"History",
+                "Political Thriller":"Political",
+                "Monster Horror":"Horror",
+                "Tragic Romance":"Romance",
+                "Psychological Horror":"Horror",
+                "Drug Crime":"Crime",
+                "Dark Comedy":"Comedy",
+                "Showbiz Drama":"Drama",
+                "Satire":"Comedy",
+                "Legal Drama":"Legal",
+                "Jungle Adventure":"Adventure",
+                "Police Procedural":"Cop",
+                "Teen Romance":"Romance",
+                "History Documentary":"History",
+                "Sports Documentary":"Sports",
+                "Computer Animation":"Anime",
+                "Raunchy Comedy":"Comedy",
+                "Buddy Cop":"Cop",
+                "Swashbuckler":"Adventure",
+                "Mockumentary":"Documentary",
+                "Cyber Thriller":"Tech",
+                "Globetrotting Adventure":"Adventure",
+                "Screwball Comedy":"Comedy",
+                "Whodunnit":"Crime",
+                "Extreme Sport":"Sport",
+                "Teen Comedy":"Comedy",
+                "Erotic Thriller":"Thriller"
+            }
+
+            df["genres"] = df["genres"].replace(genre_mapping)
+
+
             logging.info('Read the dataset as dataframe')
             os.makedirs(os.path.dirname(self.ingestion_config.train_data_path),exist_ok=True)
 
@@ -44,4 +103,6 @@ class DataIngestion:
 
 if __name__=="__main__":
     obj=DataIngestion()
-    obj.initiate_data_ingestion()
+    train_data,test_data=obj.initiate_data_ingestion()
+    data_transformation=DataTransformation()
+    data_transformation.initiate_Data_Transformation(train_data,test_data)

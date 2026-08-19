@@ -8,4 +8,5 @@ lightgbm
 catboost
 streamlit
 setuptools
--e .
+dill
+# -e .
