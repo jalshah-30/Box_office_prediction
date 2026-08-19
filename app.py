@@ -195,7 +195,7 @@ def load_model():
 
 @st.cache_data
 def load_data():
-    return pd.read_csv("data/Input_data.csv")
+    return pd.read_csv("Notebooks/data/Input_data.csv")
 
 
 try:

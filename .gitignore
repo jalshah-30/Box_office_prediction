@@ -1,2 +1,4 @@
 *.xlsx
 *.joblib
+artifacts/
+logs/
